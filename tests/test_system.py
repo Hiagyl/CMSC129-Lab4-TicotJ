@@ -10,7 +10,7 @@ def test_user_story_1_add_book(page, live_server):
     """
     User Story 1: As a reader, I want to add a new book with a title and author.
     """
-    page.goto(live_server.url)
+    page.goto(live_server.url())
 
     # Fill out the form
     page.fill("#title", "1984")
