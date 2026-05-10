@@ -28,6 +28,17 @@ This project follows the Red-Green-Refactor cycle at three distinct levels:
 
 3. **System Testing:** We perform full-browser automation using Playwright. These tests mirror our User Stories, ensuring that a real user can navigate the UI, fill out forms, and see changes reflected on the screen.
 
+## CI/CD Setup
+- **Tool:** GitHub Actions
+
+- **Trigger:** All tests run automatically on every push to the main branch.
+
+- **Evidence of TDD:** 
+    - Red Phase: ![Failed Unit Test](images/unitFail.png)
+    - Green Phase: ![Passed Unit Test](images/unitPass2.png)
+
+- **Deployment:** Automatic deployment to production occurs only if the full test suite passes.
+
 ## Setup Instructions
 1. Clone the repository:
 
@@ -64,3 +75,8 @@ python app.py
 ```bash
 pytest
 ```
+
+## Test Results
+
+Unit Test Result
+![Unit Test Result](images/unitPass.png)
