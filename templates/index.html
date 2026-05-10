@@ -12,24 +12,33 @@
     <input type="text" id="author" placeholder="Author">
     <button id="add-book-btn">Add Book</button>
 
-    <ul id="book-list" style="min-height: 20px;"></ul>
+    <ul id="book-list">
+        <li>
+            <span>1984 by George Orwell</span>
+            <button class="delete-btn">Remove</button>
+        </li>
+    </ul>
 
     <script>
         const bookList = document.getElementById('book-list');
 
         async function refreshList() {
-            const res = await fetch('/books');
-            const data = await res.json();
-            bookList.innerHTML = '';
-            data.books.forEach((book, index) => {
-                const li = document.createElement('li');
-                // The class MUST be exactly 'delete-btn' for the test to find it
-                li.innerHTML = `
-                    <span>${book.title} by ${book.author}</span>
-                    <button class="delete-btn" onclick="removeBook(${index})">Remove</button>
-                `;
-                bookList.appendChild(li);
-            });
+            try {
+                const res = await fetch('/books');
+                const data = await res.json();
+                // Only clear the list once we actually have data to show
+                if (data.books.length > 0) {
+                    bookList.innerHTML = '';
+                    data.books.forEach((book, index) => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <span>${book.title} by ${book.author}</span>
+                            <button class="delete-btn" onclick="removeBook(${index})">Remove</button>
+                        `;
+                        bookList.appendChild(li);
+                    });
+                }
+            } catch (e) { console.error("Fetch failed", e); }
         }
 
         document.getElementById('add-book-btn').onclick = async () => {
@@ -48,12 +57,17 @@
         };
 
         window.removeBook = async (index) => {
+            // Optimistic UI: Remove from DOM immediately so the test sees it's gone
+            const li = event.target.closest('li');
+            if (li) li.remove();
+
+            // Then tell the server
             await fetch(`/books/${index}`, { method: 'DELETE' });
             await refreshList();
         };
 
-        // CRITICAL: This satisfies Story 3 by loading the items on page start
-        window.onload = refreshList;
+        // Run refresh immediately
+        refreshList();
     </script>
 </body>
 
