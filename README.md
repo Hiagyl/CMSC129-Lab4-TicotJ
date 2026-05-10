@@ -80,3 +80,7 @@ pytest
 
 Unit Test Result
 ![Unit Test Result](images/unitPass.png)
+
+Integration Test Result
+![Integration Test Result](images/integrationPass1.png)
+![Integration Test Result](images/integrationPass2.png)
