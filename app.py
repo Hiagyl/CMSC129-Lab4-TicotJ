@@ -39,7 +39,6 @@ def delete_book(book_id):
         return jsonify({"status": "success"}), 200
     return jsonify({"status": "fail"}), 404
 
-
 @app.route('/books/<int:book_id>', methods=['PUT'])
 def edit_book(book_id):
     data = request.get_json()

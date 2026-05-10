@@ -4,33 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <title>letterBookxd</title>
-    <style>
-        #book-list {
-            min-height: 20px;
-        }
-    </style>
 </head>
 
 <body>
-    <h1>letterBookxd</h1>
-
+    <h1>Book Collection</h1>
     <input type="text" id="title" placeholder="Title">
     <input type="text" id="author" placeholder="Author">
     <button id="add-book-btn">Add Book</button>
 
-    <ul id="book-list"></ul>
+    <ul id="book-list" style="min-height: 20px;"></ul>
 
     <script>
         const bookList = document.getElementById('book-list');
 
-        // Helper to render the list from the backend
-        async function fetchAndRender() {
+        async function refreshList() {
             const res = await fetch('/books');
             const data = await res.json();
             bookList.innerHTML = '';
-
             data.books.forEach((book, index) => {
                 const li = document.createElement('li');
+                // The class MUST be exactly 'delete-btn' for the test to find it
                 li.innerHTML = `
                     <span>${book.title} by ${book.author}</span>
                     <button class="delete-btn" onclick="removeBook(${index})">Remove</button>
@@ -39,11 +32,9 @@
             });
         }
 
-        // Add Book logic
         document.getElementById('add-book-btn').onclick = async () => {
             const title = document.getElementById('title').value;
             const author = document.getElementById('author').value;
-
             if (title && author) {
                 await fetch('/books', {
                     method: 'POST',
@@ -52,18 +43,17 @@
                 });
                 document.getElementById('title').value = '';
                 document.getElementById('author').value = '';
-                fetchAndRender();
+                await refreshList();
             }
         };
 
-        // Remove Book logic
         window.removeBook = async (index) => {
             await fetch(`/books/${index}`, { method: 'DELETE' });
-            fetchAndRender();
+            await refreshList();
         };
 
-        // CRITICAL: Load the data when the page opens so Story 3 finds a button
-        window.onload = fetchAndRender;
+        // CRITICAL: This satisfies Story 3 by loading the items on page start
+        window.onload = refreshList;
     </script>
 </body>
 
