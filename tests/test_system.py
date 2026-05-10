@@ -25,7 +25,7 @@ def test_user_story_2_view_list(page, live_server):
     """
     User Story 2: As a librarian, I want to view a list of all saved books.
     """
-    page.goto(live_server.url)
+    page.goto(live_server.url())
 
     # The list should exist even if empty
     expect(page.locator("#book-list")).to_be_visible()
@@ -35,7 +35,7 @@ def test_user_story_3_remove_book(page, live_server):
     """
     User Story 3: As a user, I want to remove a book from the list.
     """
-    page.goto(live_server.url)
+    page.goto(live_server.url())
 
     # Assuming a book exists, try to click a delete button
     # This will fail because no such button exists yet
