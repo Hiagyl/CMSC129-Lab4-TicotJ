@@ -1,12 +1,9 @@
-def validate_book(book_data):
+def validate_book(book_data: dict) -> bool:
     """
-    Minimum implementation to pass the unit tests.
+    Improved validation logic using type hints and consolidated checks.
     """
-    title = book_data.get("title")
-    author = book_data.get("author")
+    title = book_data.get("title", "").strip()
+    author = book_data.get("author", "").strip()
 
-    # Pass if title and author exist, and title is not just whitespace
-    if title and author and title.strip():
-        return True
-
-    return False
+    # A book is valid only if both title and author are non-empty strings
+    return bool(title and author)
