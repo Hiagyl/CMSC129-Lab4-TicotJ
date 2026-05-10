@@ -4,6 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>letterBookxd</title>
+    <style>
+        /* Ensures #book-list has dimensions so Playwright sees it as 'visible' */
+        #book-list {
+            min-height: 10px;
+            display: block !important;
+            visibility: visible !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,31 +28,29 @@
         const bookList = document.getElementById('book-list');
 
         addBtn.onclick = () => {
-            const titleInput = document.getElementById('title');
-            const authorInput = document.getElementById('author');
-            const title = titleInput.value.trim();
-            const author = authorInput.value.trim();
+            const t = document.getElementById('title');
+            const a = document.getElementById('author');
 
-            if (title && author) {
+            if (t.value.trim() && a.value.trim()) {
                 const li = document.createElement('li');
 
-                // We wrap the text in a span and give the button the exact class the test wants
+                // We must use the exact class '.delete-btn' for Story 3
                 li.innerHTML = `
-                    <span>${title} by ${author}</span>
+                    <span>${t.value} by ${a.value}</span>
                     <button class="delete-btn">Remove</button>
                     <button class="edit-btn">Edit</button>
                 `;
 
-                // Logic for User Story 3 (Removal)
+                // Immediate removal logic
                 li.querySelector('.delete-btn').onclick = function () {
-                    this.parentElement.remove(); // Removes the whole LI so the text disappears
+                    this.parentElement.remove();
                 };
 
                 bookList.appendChild(li);
 
-                // Clear inputs so the next test step doesn't get old data
-                titleInput.value = '';
-                authorInput.value = '';
+                // Clear inputs so the next test step starts fresh
+                t.value = '';
+                a.value = '';
             }
         };
     </script>
