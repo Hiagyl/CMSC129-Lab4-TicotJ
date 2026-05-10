@@ -24,7 +24,7 @@ This project follows the Red-Green-Refactor cycle at three distinct levels:
 
 1. **Unit Testing:** We test the logic.py module in isolation. We focus on validation rules (e.g., preventing empty titles) and data formatting. This ensures our core business rules are foolproof before they ever touch the web.
 
-2. **Integration Testing:* We test the Flask routes in app.py. We use the Flask Test Client to simulate HTTP requests (POST, GET, DELETE) to ensure the routes correctly communicate with the data layer and return the expected status codes.
+2. **Integration Testing:** We test the Flask routes in app.py. We use the Flask Test Client to simulate HTTP requests (POST, GET, DELETE) to ensure the routes correctly communicate with the data layer and return the expected status codes.
 
 3. **System Testing:** We perform full-browser automation using Playwright. These tests mirror our User Stories, ensuring that a real user can navigate the UI, fill out forms, and see changes reflected on the screen.
 
