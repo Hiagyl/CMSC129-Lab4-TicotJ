@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>letterBookxd</title>
+</head>
+
+<body>
+    <h1>Book Collection</h1>
+
+    <input type="text" id="title" placeholder="Title">
+    <input type="text" id="author" placeholder="Author">
+    <button id="add-book-btn">Add Book</button>
+
+    <ul id="book-list"></ul>
+
+    <script>
+        const list = document.getElementById('book-list');
+
+        async function loadBooks() {
+            const res = await fetch('/books');
+            const data = await res.json();
+            list.innerHTML = data.books.map((b, i) => `
+                <li>
+                    ${b.title} by ${b.author} 
+                    <button class="delete-btn" onclick="remove(${i})">Remove</button>
+                    <button onclick="edit(${i})">Edit</button>
+                </li>
+            `).join('');
+        }
+
+        document.getElementById('add-book-btn').onclick = async () => {
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            await fetch('/books', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, author })
+            });
+            loadBooks();
+        };
+
+        async function remove(id) {
+            await fetch(`/books/${id}`, { method: 'DELETE' });
+            loadBooks();
+        }
+
+        async function edit(id) {
+            const title = prompt("New Title:");
+            const author = prompt("New Author:");
+            if (title && author) {
+                await fetch(`/books/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, author })
+                });
+                loadBooks();
+            }
+        }
+
+        loadBooks();
+    </script>
+</body>
+
+</html>
