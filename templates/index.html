@@ -6,7 +6,7 @@
     <title>letterBookxd</title>
     <style>
         #book-list {
-            min-height: 10px;
+            min-height: 20px;
         }
     </style>
 </head>
@@ -18,42 +18,52 @@
     <input type="text" id="author" placeholder="Author">
     <button id="add-book-btn">Add Book</button>
 
-    <ul id="book-list">
-        <li>
-            <span>1984 by George Orwell</span>
-            <button class="delete-btn">Remove</button>
-        </li>
-    </ul>
+    <ul id="book-list"></ul>
 
     <script>
-        const addBtn = document.getElementById('add-book-btn');
         const bookList = document.getElementById('book-list');
 
-        addBtn.onclick = () => {
-            const t = document.getElementById('title');
-            const a = document.getElementById('author');
+        // Helper to render the list from the backend
+        async function fetchAndRender() {
+            const res = await fetch('/books');
+            const data = await res.json();
+            bookList.innerHTML = '';
 
-            if (t.value.trim() && a.value.trim()) {
+            data.books.forEach((book, index) => {
                 const li = document.createElement('li');
                 li.innerHTML = `
-                    <span>${t.value} by ${a.value}</span>
-                    <button class="delete-btn">Remove</button>
+                    <span>${book.title} by ${book.author}</span>
+                    <button class="delete-btn" onclick="removeBook(${index})">Remove</button>
                 `;
-
-                li.querySelector('.delete-btn').onclick = function () {
-                    this.parentElement.remove();
-                };
-
                 bookList.appendChild(li);
-                t.value = '';
-                a.value = '';
+            });
+        }
+
+        // Add Book logic
+        document.getElementById('add-book-btn').onclick = async () => {
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+
+            if (title && author) {
+                await fetch('/books', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, author })
+                });
+                document.getElementById('title').value = '';
+                document.getElementById('author').value = '';
+                fetchAndRender();
             }
         };
 
-        // Attach logic to the pre-populated button as well
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.onclick = function () { this.parentElement.remove(); };
-        });
+        // Remove Book logic
+        window.removeBook = async (index) => {
+            await fetch(`/books/${index}`, { method: 'DELETE' });
+            fetchAndRender();
+        };
+
+        // CRITICAL: Load the data when the page opens so Story 3 finds a button
+        window.onload = fetchAndRender;
     </script>
 </body>
 
