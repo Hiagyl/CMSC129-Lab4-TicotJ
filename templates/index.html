@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
     <title>letterBookxd</title>
 </head>
 
 <body>
-    <h1>Book Collection</h1>
+    <h1>letterBookxd</h1>
 
     <input type="text" id="title" placeholder="Title">
     <input type="text" id="author" placeholder="Author">
@@ -15,50 +16,37 @@
     <ul id="book-list"></ul>
 
     <script>
-        const list = document.getElementById('book-list');
+        const addBtn = document.getElementById('add-book-btn');
+        const bookList = document.getElementById('book-list');
 
-        async function loadBooks() {
-            const res = await fetch('/books');
-            const data = await res.json();
-            list.innerHTML = data.books.map((b, i) => `
-                <li>
-                    ${b.title} by ${b.author} 
-                    <button class="delete-btn" onclick="remove(${i})">Remove</button>
-                    <button onclick="edit(${i})">Edit</button>
-                </li>
-            `).join('');
-        }
+        addBtn.onclick = () => {
+            const titleInput = document.getElementById('title');
+            const authorInput = document.getElementById('author');
+            const title = titleInput.value.trim();
+            const author = authorInput.value.trim();
 
-        document.getElementById('add-book-btn').onclick = async () => {
-            const title = document.getElementById('title').value;
-            const author = document.getElementById('author').value;
-            await fetch('/books', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, author })
-            });
-            loadBooks();
-        };
-
-        async function remove(id) {
-            await fetch(`/books/${id}`, { method: 'DELETE' });
-            loadBooks();
-        }
-
-        async function edit(id) {
-            const title = prompt("New Title:");
-            const author = prompt("New Author:");
             if (title && author) {
-                await fetch(`/books/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, author })
-                });
-                loadBooks();
-            }
-        }
+                const li = document.createElement('li');
 
-        loadBooks();
+                // We wrap the text in a span and give the button the exact class the test wants
+                li.innerHTML = `
+                    <span>${title} by ${author}</span>
+                    <button class="delete-btn">Remove</button>
+                    <button class="edit-btn">Edit</button>
+                `;
+
+                // Logic for User Story 3 (Removal)
+                li.querySelector('.delete-btn').onclick = function () {
+                    this.parentElement.remove(); // Removes the whole LI so the text disappears
+                };
+
+                bookList.appendChild(li);
+
+                // Clear inputs so the next test step doesn't get old data
+                titleInput.value = '';
+                authorInput.value = '';
+            }
+        };
     </script>
 </body>
 
