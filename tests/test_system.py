@@ -54,14 +54,15 @@ def test_user_story_3_persistent_content_load(page, live_server):
 @pytest.mark.usefixtures('live_server')
 def test_user_story_3_remove_book(page, live_server):
     page.goto(live_server.url())
-    
+
     # Pre-seed a book entry
     page.fill("#title", "Dune")
     page.fill("#author", "Frank Herbert")
     page.click("#add-book-btn")
     
-    # Execute removal action click
-    page.click(".delete-btn")
-    
+    # 🎯 FIX: Locate the specific list element for Dune, then find its delete button
+    dune_item = page.locator("#book-list li", has_text="Dune")
+    dune_item.locator(".delete-btn").click()
+
     # Assert entry is purged from visible UI list
     expect(page.locator("#book-list")).not_to_contain_text("Dune")
