@@ -34,10 +34,11 @@ def get_books():
 
 @app.route('/books/<int:book_id>', methods=['DELETE'])
 def delete_book(book_id):
-    if 0 <= book_id < len(db["books"]):
-        db["books"].pop(book_id)
-        return jsonify({"status": "success"}), 200
-    return jsonify({"status": "fail"}), 404
+    # if 0 <= book_id < len(db["books"]):
+    #     db["books"].pop(book_id)
+    #     return jsonify({"status": "success"}), 200
+    # return jsonify({"status": "fail"}), 404
+    pass
 
 
 @app.route('/books/<int:book_id>', methods=['PUT'])
